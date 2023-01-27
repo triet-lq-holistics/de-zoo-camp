@@ -1,0 +1,13 @@
+secrets/
+
+*.DS_Store
+**/venv/**
+**/.ipynb_checkpoints
+*.parquet
+*.csv
+*.gz
+*.txt
+*.ipynb
+*.json
+
+week_1_basics_n_setup/docker_sql/ny_taxi_postgres_data

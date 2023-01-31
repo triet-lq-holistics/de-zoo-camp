@@ -77,7 +77,7 @@ def write_local(df, color: str, year:int, dataset_file: str) -> Path:
 
 
 @task(retries=3, log_prints=True)
-def write_gcs(path: Path) -> None:
+def write_cleaned_gcs(path: Path) -> None:
     '''
         Write cleaned data to gcs
     '''
@@ -140,7 +140,7 @@ def flows_to_bq():
     df = fetch_from_gcs(color, dataset_file) #task
     df = transform(df) #task
     path = write_local(df, color, year, dataset_file) #task
-    gcs_path = write_gcs(path) #task
+    gcs_path = write_cleaned_gcs(path) #task
     table_name = load_to_bq(gcs_path) #task
     print(table_name)
 

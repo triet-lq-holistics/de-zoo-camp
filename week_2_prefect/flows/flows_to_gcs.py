@@ -1,6 +1,7 @@
 from prefect import task, flow
 from prefect.tasks import task_input_hash
 from prefect_gcp import GcsBucket
+from typing import Union
 
 import pandas as pd
 from datetime import timedelta
@@ -22,7 +23,7 @@ def write_local(df, color: str, year:int, dataset_file: str) -> Path:
         os.mkdir(outdir)  
 
     path = Path(f"{outdir}/{dataset_file}.parquet")
-
+    print(f"Shape of the dataset {df.shape}")
     df.to_parquet(path, compression="gzip")
     return path
 
@@ -50,13 +51,20 @@ def flows_to_gcs(month: int, year: int, color: str):
 
 @flow(name="Parent flow to gcs")
 def parent_flow_to_gcs(
-    months:list[int] = [1,2], 
+    months:Union[int, list[int]] = 4, 
     year:int=2019, 
     color:str="green"
 ):
     """Parent flow for parametrizing"""
-    for month in months:
-        flows_to_gcs(month, year, color)
+    if isinstance(months, int):
+        flows_to_gcs(months, year, color)
+
+    elif isinstance(months, list):
+        for month in months:
+            flows_to_gcs(month, year, color)
+
+    else:
+        raise TypeError("param must be of type int or list")
 
 if __name__ == "__main__":
     parent_flow_to_gcs()

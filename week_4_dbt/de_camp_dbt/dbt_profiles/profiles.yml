@@ -1,14 +1,14 @@
 de_camp_dbt:
   outputs:
     dev:
-      dataset: dbt
+      dataset: trips_data_all
       fixed_retries: 1
       keyfile: "./dbt_profiles/cred.json"
-      location: ASIA
       method: service-account
       priority: interactive
       project: dzc-trietle
       threads: 4
       timeout_seconds: 300
       type: bigquery
+      location: asia-southeast1
   target: dev
